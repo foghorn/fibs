@@ -1,17 +1,26 @@
-# FIBS: Featured Image Bulk Set
+=== Plugin Name ===
+Contributors: kc2qcy
+Tags: utilities, featured image
+Requires at least: 4.7
+Tested up to: 5.6
+Stable tag: 1.0
+Requires PHP: 7.0
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-This is a plugin designed to do one simple job: programatically add a featured image in WordPress to existing posts.
+This is a plugin designed to do one simple job: programatically add a featured image in WordPress to existing posts. Either images already in the post, or a default image you can select.
 
-I've worked on a couple older WordPress blogs which had hundreds of posts in the old format, where Featured Images wasn't really a 'thing'. Adding a new Featured Image to each one would take days of effort. With this plugin, you can quickly and easily use either the first or last image from within the post to be the new Featured Image.
+== Description ==
 
-## GitHub Repository
+This plugin adds a section to your Settings menu in the wp-admin section. Through that section you can perform two tasks:
 
-https://github.com/foghorn/fibs
+* Update all posts that do not have a current Featured Image set such that the FIRST image used in the post is the new Featured Image
+* Update all posts that do not have a current Featured Image set such that the LAST image used in the post is the new Featured Image
+* Update all posts that do not have a current Featured Image set with a selected image as the new Featured Image
 
-## How to Use
+There is also the option, for the first two functions, to have a specific image set as a fallback option in the case that there are no images in the post.
 
-- Download this code and install it in your wp-plugins folder
-- Activete the plugin in your WordPress plugin section of the wp-admin panel
-- There should be a new section called "FIBS Menu" added to the Settings section. Click that.
-- Select your options and hit "save" to start the process. NOTE: this process cannot be stopped once stared.
-- NOTE: If you don't click the box at the bottom, you can do a test run of the process to see what the result will be.
+== Changelog ==
+
+= 1.0 =
+* First version! 

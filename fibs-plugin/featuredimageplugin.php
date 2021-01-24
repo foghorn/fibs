@@ -32,19 +32,23 @@
         <input type="hidden" id="secretcheck" name="secretcheck" value="1">
 
         <!-- FIRST OR LAST -->
-        First or Last Image for Default?<br>
+        <h3>First or Last Image for Default?</h3>
         <input type="radio" id="first" name="firstlast" value="1" checked="checked"> First Image<br>
         <input type="radio" id="first" name="firstlast" value="0"> Last Image<br>
         <br>
 
         <!-- DEFAULT IMAGE -->
-        <label for="dim">Set a Default Image for Posts Without Images?</label><br>
+        <h3>Set a Default Image for Posts Without Images?</h3>
         <input type="text" id="dim" name="dim"><br>
-        Use image ID. Leave blank to set NO image in those cases.<br>
+        (Use image ID. Leave blank to set NO image in those cases.)<br>
+        <br>
+        <input type="checkbox" id="override" name="override" value="1">
+        <label for="override"> Override finding images in posts?</label><br>
+        NOTE: Setting this option will set this image as the Featured Image for ALL posts without a current Featured Image, even those that contain images.<br>
         <br>
 
         <!-- TEST OR REAL -->
-        Do it for real?<br>
+        <h3>Do it for real?</h3>
         <input type="checkbox" id="forreal" name="forreal" value="1">
         <label for="forreal"> Yes!</label><br>
         <br>
@@ -145,6 +149,29 @@
                 }
               }
 
+            }
+            elseif (strlen($_POST['dim']) > 0)
+            {
+              //Check that this is really an image
+              if (wp_attachment_is_image($_POST['dim']))
+              {
+                if ($_POST['forreal'] == 1)
+                {
+                  //Update with the image
+                  set_post_thumbnail($B['ID'],$_POST['dim']);
+                }
+                else
+                {
+                  echo "Would have set image " . $_POST['dim'] . "<br>";
+                }
+                
+              }
+              else
+              {
+                echo "ERROR: Post ID provided is not an image!<br>";
+              }
+
+              
             }
             else
             {
