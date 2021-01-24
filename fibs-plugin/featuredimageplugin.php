@@ -9,6 +9,26 @@
   License: GPL2
   */
 
+  //Validate image and insert
+  function CheckAndPost($ID,$image,$real)
+  {
+    if (wp_attachment_is_image($image))
+    {
+      if ($real == 1)
+      {
+        set_post_thumbnail($ID,$image);
+      }
+      else
+      {
+        echo "Would have set image " . $image . "<br>";
+      }
+    }
+    else
+    {
+      echo "ERROR: Identified image ID is not an image<br>";
+    }
+  }
+
 
   function fibs_add_settings_page() {
   add_options_page( 'Featured Image Bulk Set', 'FIBS Menu', 'manage_options', 'fibs_plugin', 'fibs_render_plugin_settings_page' );
@@ -86,8 +106,14 @@
           {
             echo "Grabbed post: " . md5($F['post_content']) . "<br>";
             
+            //Check override
+            if ( (strlen($_POST['dim']) > 0) AND ($_POST['override'] == 1) )
+            {
+              //Check that this is really an image and post
+              CheckAndPost($B['ID'],$_POST['dim'],$_POST['forreal']);
+            }
             //is there an image to be found?
-            if (substr_count($F['post_content'],'wp-image-'))
+            elseif (substr_count($F['post_content'],'wp-image-'))
             {
               echo "Image found!<br>";
               
@@ -110,15 +136,7 @@
                 //Slice string to just post ID
                 $thumbnailID = substr($img_slice,9,($counter - 9));
 
-                if ($_POST['forreal'] == 1)
-                {
-                  set_post_thumbnail($B['ID'],$thumbnailID);
-                }
-                else
-                {
-                  echo "Would have set image " . $thumbnailID . "<br>";
-                }
-
+                CheckAndPost($B['ID'],$thumbnailID,$_POST['forreal']);
                 
               }
               else
@@ -139,39 +157,15 @@
                 //Slice string to just post ID
                 $thumbnailID = substr($img_slice,9,($counter - 9));
 
-                if ($_POST['forreal'] == 1)
-                {
-                  set_post_thumbnail($B['ID'],$thumbnailID);
-                }
-                else
-                {
-                  echo "Would have set image " . $thumbnailID . "<br>";
-                }
+                CheckAndPost($B['ID'],$thumbnailID,$_POST['forreal']);
               }
 
             }
             elseif (strlen($_POST['dim']) > 0)
             {
-              //Check that this is really an image
-              if (wp_attachment_is_image($_POST['dim']))
-              {
-                if ($_POST['forreal'] == 1)
-                {
-                  //Update with the image
-                  set_post_thumbnail($B['ID'],$_POST['dim']);
-                }
-                else
-                {
-                  echo "Would have set image " . $_POST['dim'] . "<br>";
-                }
-                
-              }
-              else
-              {
-                echo "ERROR: Post ID provided is not an image!<br>";
-              }
-
-              
+              //Check that this is really an image and post
+              CheckAndPost($B['ID'],$_POST['dim'],$_POST['forreal']);
+                            
             }
             else
             {
