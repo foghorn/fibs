@@ -32,7 +32,7 @@
 
         <!-- FIRST OR LAST -->
         First or Last Image for Default?<br>
-        <input type="radio" id="first" name="firstlast" value="1"> First Image<br>
+        <input type="radio" id="first" name="firstlast" value="1" checked="checked"> First Image<br>
         <input type="radio" id="first" name="firstlast" value="0"> Last Image<br>
         <br>
 
