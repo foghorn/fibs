@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== Featured Image Bulk Set Plugin ===
 Contributors: kc2qcy
 Tags: utilities, featured image
 Requires at least: 4.7
