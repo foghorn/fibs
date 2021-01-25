@@ -3,7 +3,7 @@ Contributors: kc2qcy
 Tags: utilities, featured image
 Requires at least: 4.7
 Tested up to: 5.6
-Stable tag: 1.1
+Stable tag: 1.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -21,6 +21,9 @@ This plugin adds a section to your Settings menu in the wp-admin section. Throug
 There is also the option, for the first two functions, to have a specific image set as a fallback option in the case that there are no images in the post.
 
 == Changelog ==
+
+= 1.2 =
+* Added input sanitization and output escaping as per the WordPress plugin security standards
 
 = 1.1 =
 * Connected the image override function

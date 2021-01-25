@@ -12,20 +12,43 @@
   //Validate image and insert
   function CheckAndPost($ID,$image,$real)
   {
-    if (wp_attachment_is_image($image))
+    $ID = sanitize_text_field($ID);
+    $image = sanitize_text_field($image);
+    $real = sanitize_text_field($real);
+
+    //Check that the two posts passed are a number
+    if ((is_numeric($image)) AND  (is_numeric($ID)))
     {
-      if ($real == 1)
+      //Make sure we are setting for a post
+      if (get_post_status($ID) != FALSE)
       {
-        set_post_thumbnail($ID,$image);
+        //Check that this number is actually a Post ID of an image attachment
+        if (wp_attachment_is_image($image))
+        {
+          //Check that the end user really wants to do this
+          if ($real == 1)
+          {
+            set_post_thumbnail($ID,$image);
+          }
+          //Otherwise, tell them what would have happened
+          else
+          {
+            echo "Would have set image " . wp_kses($image,array()) . "<br>";
+          }
+        }
+        else
+        {
+          echo "ERROR: Identified image ID is not an image<br>";
+        }
       }
       else
       {
-        echo "Would have set image " . $image . "<br>";
+        echo "ERROR: Tried to set the featured image for something that is not a post<br>";
       }
     }
     else
     {
-      echo "ERROR: Identified image ID is not an image<br>";
+      echo "ERROR: Either the Post ID or the Featured Image ID are not a number<br>";
     }
   }
 
@@ -36,14 +59,23 @@
   add_action( 'admin_menu', 'fibs_add_settings_page' );
 
   function fibs_render_plugin_settings_page() {
+    //Sanitize user input
+    $execute = sanitize_text_field($_GET['execute']);
+    $secretcheck = sanitize_text_field($_POST['secretcheck']);
+    $dim = sanitize_text_field($_POST['dim']);
+    $override = sanitize_text_field($_POST['override']);
+    $forreal = sanitize_text_field($_POST['forreal']);
+    $firstlast = sanitize_text_field($_POST['firstlast']);
+    
+    //Get and sanitize table name
     global $wpdb;
     $prefix = $wpdb->prefix;
-    $tablename = $prefix  . "posts";
+    $tablename = sanitize_text_field($prefix  . "posts");
     ?>
     <h2>Featured Image Bulk Set Functionality</h2>
     <?php
 
-    if ($_GET['execute'] != 1)
+    if ($execute != 1)
     {
       ?>
         <form action="options-general.php?page=fibs_plugin&execute=1" method="post">
@@ -78,113 +110,127 @@
         </form>
       <?php
     }
-    elseif ($_POST['secretcheck'] == 1)
+    elseif ($secretcheck == 1)
     {
 
-      $con=mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-
-      $A = mysqli_query($con,"SELECT * FROM " . $tablename . " WHERE post_type = 'post'");
-      while($B = mysqli_fetch_array($A))
+      //Make sure the default featured image, if set, is actually a usable image
+      if ((($dim != NULL) OR ($dim != 0)) AND ((is_numeric($dim) == FALSE) OR (wp_attachment_is_image($dim) == FALSE)))
       {
-        echo "<br>Checking " . $B['ID'] . "<br>";
+        echo "ERROR: Entered default featured image is not correct, please check and ensure that you entered the correct Post ID for the required featured image.<br>";
+      }
+      else
+      {
+        $con=mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
-        
-        //Check that there is a featured image
-        if (get_post_thumbnail_id($B['ID']) == FALSE)
+        $A = mysqli_query($con,"SELECT * FROM " . $tablename . " WHERE post_type = 'post'");
+        while($B = mysqli_fetch_array($A))
         {
-          echo "NO FEATURED IMAGE!<br>";
+          //Sanitize database returns
+          $Return_ID = sanitize_text_field($B['ID']);
           
-          //Find featured image
-          $img_ref = '';
-          $img_slice = '';
-          
-          //Grab the post content
-          $E = mysqli_query($con,"SELECT post_content FROM " . $tablename . " WHERE ID = '" . $B['ID'] . "'");
-          $F = mysqli_fetch_array($E);
+          echo "<br>Checking " . wp_kses($Return_ID,array()) . "<br>";
 
-          if (strlen($F['post_content']) > 0)
+          
+          //Check that there is a featured image
+          if (get_post_thumbnail_id($Return_ID) == FALSE)
           {
-            echo "Grabbed post: " . md5($F['post_content']) . "<br>";
+            echo "NO FEATURED IMAGE!<br>";
             
-            //Check override
-            if ( (strlen($_POST['dim']) > 0) AND ($_POST['override'] == 1) )
+            //Find featured image
+            $img_ref = '';
+            $img_slice = '';
+            
+            //Grab the post content
+            $E = mysqli_query($con,"SELECT post_content FROM " . $tablename . " WHERE ID = '" . $Return_ID . "'");
+            $F = mysqli_fetch_array($E);
+
+            //Sanitize content
+            $return_content = wp_kses_post($F['post_content']);
+
+            if (strlen($return_content) > 0)
             {
-              //Check that this is really an image and post
-              CheckAndPost($B['ID'],$_POST['dim'],$_POST['forreal']);
-            }
-            //is there an image to be found?
-            elseif (substr_count($F['post_content'],'wp-image-'))
-            {
-              echo "Image found!<br>";
+              echo "Grabbed post: " . wp_kses(md5($return_content),array()) . "<br>";
               
-              //First or last image?
-              if ($_POST['firstlast'] == 1)
+              //Check override
+              if ( (strlen($dim) > 0) AND ($override == 1) )
               {
-                //Identify the first wp-image- referenced
-                $img_ref = stripos($F['post_content'],'wp-image-');
-
-                $img_slice = substr($F['post_content'],$img_ref);
-
-                //Find where this string ends
-                $counter = 9;
-
-                while (preg_match('/^[a-zA-Z0-9\-]$/',substr($img_slice,$counter,1)))
+                //Check that this is really an image and post
+                CheckAndPost($Return_ID,$dim,$forreal);
+              }
+              //is there an image to be found?
+              elseif (substr_count($return_content,'wp-image-'))
+              {
+                echo "Image found!<br>";
+                
+                //First or last image?
+                if ($firstlast == 1)
                 {
-                  $counter++;
+                  //Identify the first wp-image- referenced
+                  $img_ref = stripos($return_content,'wp-image-');
+
+                  $img_slice = substr($return_content,$img_ref);
+
+                  //Find where this string ends
+                  $counter = 9;
+
+                  while (preg_match('/^[a-zA-Z0-9\-]$/',substr($img_slice,$counter,1)))
+                  {
+                    $counter++;
+                  }
+
+                  //Slice string to just post ID
+                  $thumbnailID = substr($img_slice,9,($counter - 9));
+
+                  CheckAndPost($Return_ID,$thumbnailID,$forreal);
+                  
+                }
+                else
+                {
+                  //Identify the last wp-image- referenced
+                  $img_ref = strripos($return_content,'wp-image-');
+
+                  $img_slice = substr($return_content,$img_ref);
+
+                  //Find where this string ends
+                  $counter = 9;
+
+                  while (preg_match('/^[a-zA-Z0-9\-]$/',substr($img_slice,$counter,1)))
+                  {
+                    $counter++;
+                  }
+
+                  //Slice string to just post ID
+                  $thumbnailID = substr($img_slice,9,($counter - 9));
+
+                  CheckAndPost($Return_ID,$thumbnailID,$forreal);
                 }
 
-                //Slice string to just post ID
-                $thumbnailID = substr($img_slice,9,($counter - 9));
-
-                CheckAndPost($B['ID'],$thumbnailID,$_POST['forreal']);
-                
+              }
+              elseif (strlen($dim) > 0)
+              {
+                //Check that this is really an image and post
+                CheckAndPost($Return_ID,$dim,$forreal);
+                              
               }
               else
               {
-                //Identify the first wp-image- referenced
-                $img_ref = strripos($F['post_content'],'wp-image-');
-
-                $img_slice = substr($F['post_content'],$img_ref);
-
-                //Find where this string ends
-                $counter = 9;
-
-                while (preg_match('/^[a-zA-Z0-9\-]$/',substr($img_slice,$counter,1)))
-                {
-                  $counter++;
-                }
-
-                //Slice string to just post ID
-                $thumbnailID = substr($img_slice,9,($counter - 9));
-
-                CheckAndPost($B['ID'],$thumbnailID,$_POST['forreal']);
+                  echo "ERROR: No image found<br>";
               }
 
             }
-            elseif (strlen($_POST['dim']) > 0)
-            {
-              //Check that this is really an image and post
-              CheckAndPost($B['ID'],$_POST['dim'],$_POST['forreal']);
-                            
-            }
             else
             {
-                echo "ERROR: No image found<br>";
+                echo "ERROR: Zero length post<br>";
             }
-
+            
           }
           else
           {
-              echo "ERROR: Zero length post<br>";
+            echo "FEATURED IMAGE SET!<br>";
           }
-          
         }
-        else
-        {
-          echo "FEATURED IMAGE SET!<br>";
-        }
+        echo '<br><br>FINSIHED: <a href="options-general.php?page=fibs_plugin">Back to the beginning!</a>';
       }
-      echo '<br><br>FINSIHED: <a href="options-general.php?page=fibs_plugin">Back to the beginning!</a>';
           
     }
     else
