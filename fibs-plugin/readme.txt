@@ -22,6 +22,9 @@ There is also the option, for the first two functions, to have a specific image 
 
 == Changelog ==
 
+= 1.3 =
+* Added unique identifier to function name
+
 = 1.2 =
 * Added input sanitization and output escaping as per the WordPress plugin security standards
 

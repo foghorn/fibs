@@ -3,14 +3,14 @@
   Plugin Name: Featured Image Bulk Set
   Plugin URI: https://github.com/foghorn/fibs
   description: A plugin to set the featured image for posts where none exists using the first image in the post
-  Version: 1.2
+  Version: 1.3
   Author: Nick Leghorn
   Author URI: https://blog.nickleghorn.com
   License: GPL2
   */
 
   //Validate image and insert
-  function CheckAndPost($ID,$image,$real)
+  function fibs_CheckAndPost($ID,$image,$real)
   {
     $ID = sanitize_text_field($ID);
     $image = sanitize_text_field($image);
@@ -155,7 +155,7 @@
               if ( (strlen($dim) > 0) AND ($override == 1) )
               {
                 //Check that this is really an image and post
-                CheckAndPost($Return_ID,$dim,$forreal);
+                fibs_CheckAndPost($Return_ID,$dim,$forreal);
               }
               //is there an image to be found?
               elseif (substr_count($return_content,'wp-image-'))
@@ -181,7 +181,7 @@
                   //Slice string to just post ID
                   $thumbnailID = substr($img_slice,9,($counter - 9));
 
-                  CheckAndPost($Return_ID,$thumbnailID,$forreal);
+                  fibs_CheckAndPost($Return_ID,$thumbnailID,$forreal);
                   
                 }
                 else
@@ -202,14 +202,14 @@
                   //Slice string to just post ID
                   $thumbnailID = substr($img_slice,9,($counter - 9));
 
-                  CheckAndPost($Return_ID,$thumbnailID,$forreal);
+                  fibs_CheckAndPost($Return_ID,$thumbnailID,$forreal);
                 }
 
               }
               elseif (strlen($dim) > 0)
               {
                 //Check that this is really an image and post
-                CheckAndPost($Return_ID,$dim,$forreal);
+                fibs_CheckAndPost($Return_ID,$dim,$forreal);
                               
               }
               else
