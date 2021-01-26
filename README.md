@@ -4,6 +4,10 @@ This is a plugin designed to do one simple job: programatically add a featured i
 
 I've worked on a couple older WordPress blogs which had hundreds of posts in the old format, where Featured Images wasn't really a 'thing'. Adding a new Featured Image to each one would take days of effort. With this plugin, you can quickly and easily use either the first or last image from within the post to be the new Featured Image.
 
+## Blog Describing the Plugin
+
+https://blog.nickleghorn.com/2021/01/25/adding-a-featured-image-to-all-posts-in-wordpress-in-one-easy-click/
+
 ## GitHub Repository
 
 https://github.com/foghorn/fibs
