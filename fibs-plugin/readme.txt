@@ -3,7 +3,7 @@ Contributors: kc2qcy
 Tags: utilities, featured image
 Requires at least: 4.7
 Tested up to: 5.6
-Stable tag: 1.2
+Stable tag: 1.3
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -19,6 +19,8 @@ This plugin adds a section to your Settings menu in the wp-admin section. Throug
 * Update all posts that do not have a current Featured Image set with a selected image as the new Featured Image
 
 There is also the option, for the first two functions, to have a specific image set as a fallback option in the case that there are no images in the post.
+
+Special thanks to Robert Farago for giving me yet another massive site without any Featured Images to clean up for the impetus to finally make this available.
 
 == Changelog ==
 

@@ -12,6 +12,10 @@ https://blog.nickleghorn.com/2021/01/25/adding-a-featured-image-to-all-posts-in-
 
 https://github.com/foghorn/fibs
 
+## Wordpress Plugin Repo Page
+
+https://wordpress.org/plugins/featured-image-bulk-set/
+
 ## Fair Warning: This Code is Terrible, but Effective
 
 No one here is claiming that this is the best or prettiest way of doing this. But it's here, it works, and it's free. 
