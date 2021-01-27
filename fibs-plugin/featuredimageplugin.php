@@ -164,8 +164,8 @@
     //Make sure we actually want it to run
     if (get_option('fibs_automated') == 1)
     {
-      //Check that we are on a post
-      if ((get_post_type() == 'post') AND is_singular())
+      //Check that we are on a post that is published
+      if ((get_post_type() == 'post') AND is_singular() AND ('publish' === get_post_status()))
       {
         
         //check whether there is a featured image
@@ -261,10 +261,14 @@
       //Default image?
       if ((get_post_status($dim) != FALSE) AND wp_attachment_is_image($dim))
         update_option('fibs_dim',$dim);
+      elseif ($dim != '')
+        update_option('fibs_dim','');
 
       //Override?
-      if (is_numeric($override))
+      if (is_numeric($override) AND (get_option('fibs_dim') != ''))
         update_option('fibs_override',$override);
+      else
+        update_option('fibs_override',0);
 
       //Do it automatically?
       if (is_numeric($automated))
