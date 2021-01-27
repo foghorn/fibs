@@ -24,6 +24,9 @@ Special thanks to Robert Farago for giving me yet another massive site without a
 
 == Changelog ==
 
+= 1.4.2 =
+* Fixed a bug that would cause no posts to be returned from the query of the post DB
+
 = 1.4.1 =
 * Added the ability to exclude drafts in posts that get featured images
 
