@@ -24,6 +24,11 @@ Special thanks to Robert Farago for giving me yet another massive site without a
 
 == Changelog ==
 
+= 1.4 =
+* Moved post checking items into their own function
+* Added configurable options to the script
+* Added the ability to automatically have every post update with a featured image, checked every time the page is loaded
+
 = 1.3 =
 * Added unique identifier to function name
 
