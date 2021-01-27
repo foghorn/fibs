@@ -3,7 +3,7 @@
   Plugin Name: Featured Image Bulk Set
   Plugin URI: https://github.com/foghorn/fibs
   description: A plugin to set the featured image for posts where none exists using the first image in the post
-  Version: 1.4
+  Version: 1.4.1
   Author: Nick Leghorn
   Author URI: https://blog.nickleghorn.com
   License: GPL2
@@ -242,7 +242,8 @@
     $forreal = sanitize_text_field($_POST['forreal']);
     $firstlast = sanitize_text_field($_POST['firstlast']);
     $automated = sanitize_text_field($_POST['automated']);
-    
+    $drafts = sanitize_text_field($_POST['drafts']);
+
     //Get and sanitize table name
     global $wpdb;
     $prefix = $wpdb->prefix;
@@ -270,9 +271,14 @@
       else
         update_option('fibs_override',0);
 
+      //Include drafts?
+      if (is_numeric($drafts))
+        update_option('fibs_drafts',$drafts);
+
       //Do it automatically?
       if (is_numeric($automated))
         update_option('fibs_automated',$automated);
+
     }
     
     if (($execute != 1) OR ($forreal == 2))
@@ -311,6 +317,12 @@
         I recommend setting a default image WITHOUT the override for use with the automated featured image option.<br>
         <br>
 
+        <!-- DRAFT -->
+        <h3>Include Drafts?</h3>
+        <input type="radio" id="drafts" name="drafts" value="0" <?php echo fibs_checked_checker('fibs_drafts',0); ?> > Yes!<br>
+        <input type="radio" id="drafts" name="drafts" value="1" <?php echo fibs_checked_checker('fibs_drafts',1); ?> > No!<br>
+        <br>
+
         <!-- AUTO -->
         <h3>Enable automatically adding a featured image to all new posts?</h3>
         <input type="radio" id="automated" name="automated" value="0" <?php echo fibs_checked_checker('fibs_automated',0); ?> > NO!<br>
@@ -342,7 +354,16 @@
       {
         $con=mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
-        $A = mysqli_query($con,"SELECT * FROM " . $tablename . " WHERE post_type = 'post'");
+        if ($drafts == 1)
+        {
+          $draftsinclude = " AND post_status = 'published'";
+        }
+        else
+        {
+          $draftsinclude = '';
+        }
+
+        $A = mysqli_query($con,"SELECT * FROM " . $tablename . " WHERE post_type = 'post'" . $draftsinclude);
         while($B = mysqli_fetch_array($A))
         {
           //Sanitize database returns

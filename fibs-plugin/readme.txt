@@ -24,6 +24,9 @@ Special thanks to Robert Farago for giving me yet another massive site without a
 
 == Changelog ==
 
+= 1.4.1 =
+* Added the ability to exclude drafts in posts that get featured images
+
 = 1.4 =
 * Moved post checking items into their own function
 * Added configurable options to the script
