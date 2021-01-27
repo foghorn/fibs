@@ -3,7 +3,7 @@
   Plugin Name: Featured Image Bulk Set
   Plugin URI: https://github.com/foghorn/fibs
   description: A plugin to set the featured image for posts where none exists using the first image in the post
-  Version: 1.4.2
+  Version: 1.5
   Author: Nick Leghorn
   Author URI: https://blog.nickleghorn.com
   License: GPL2

@@ -3,7 +3,7 @@ Contributors: kc2qcy
 Tags: utilities, featured image
 Requires at least: 4.7
 Tested up to: 5.6
-Stable tag: 1.4
+Stable tag: 1.5
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -23,6 +23,9 @@ There is also the option, for the first two functions, to have a specific image 
 Special thanks to Robert Farago for giving me yet another massive site without any Featured Images to clean up for the impetus to finally make this available.
 
 == Changelog ==
+
+= 1.5 =
+* Tested stable release of changes in 1.4.1 and 1.4.2
 
 = 1.4.2 =
 * Fixed a bug that would cause no posts to be returned from the query of the post DB
