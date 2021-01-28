@@ -3,7 +3,7 @@ Contributors: kc2qcy
 Tags: utilities, featured image
 Requires at least: 4.7
 Tested up to: 5.6
-Stable tag: 1.5
+Stable tag: 1.5.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -14,15 +14,17 @@ This is a plugin designed to do one simple job: programatically add a featured i
 
 This plugin adds a section to your Settings menu in the wp-admin section. Through that section you can perform two tasks:
 
-* Update all posts that do not have a current Featured Image set such that the FIRST image used in the post is the new Featured Image
-* Update all posts that do not have a current Featured Image set such that the LAST image used in the post is the new Featured Image
-* Update all posts that do not have a current Featured Image set with a selected image as the new Featured Image
+* A scripted, one-time action updating all of the posts in your blog that do not have a featured image where the script will either try to find a suitable image to use or use one you have provided and configure it for you.
+* An ongoing, continuous monitoring for posts that do not have a featured image, using the same logic to try and find a suitable featured image and setting that for the post.
 
-There is also the option, for the first two functions, to have a specific image set as a fallback option in the case that there are no images in the post.
+You can find additional documentation for this plugin on the author's blog [blog.nickleghorn.com](https://blog.nickleghorn.com/2021/01/25/adding-a-featured-image-to-all-posts-in-wordpress-in-one-easy-click/ "blog.nickleghorn.com")
 
 Special thanks to Robert Farago for giving me yet another massive site without any Featured Images to clean up for the impetus to finally make this available.
 
 == Changelog ==
+
+= 1.5.1 = 
+* Update readme
 
 = 1.5 =
 * Tested stable release of changes in 1.4.1 and 1.4.2
