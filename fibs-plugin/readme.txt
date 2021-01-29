@@ -3,7 +3,7 @@ Contributors: kc2qcy
 Tags: utilities, featured image
 Requires at least: 4.7
 Tested up to: 5.6
-Stable tag: 1.5.1
+Stable tag: 1.5.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -22,6 +22,9 @@ You can find additional documentation for this plugin on the author's blog [blog
 Special thanks to Robert Farago for giving me yet another massive site without any Featured Images to clean up for the impetus to finally make this available.
 
 == Changelog ==
+
+= 1.5.2 = 
+* Fixed an issue where output was not being presented correctly to the end user.
 
 = 1.5.1 = 
 * Update readme

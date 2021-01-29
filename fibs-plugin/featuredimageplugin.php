@@ -3,7 +3,7 @@
   Plugin Name: Featured Image Bulk Set
   Plugin URI: https://github.com/foghorn/fibs
   description: A plugin to set the featured image for posts where none exists using the first image in the post
-  Version: 1.5.1
+  Version: 1.5.2
   Author: Nick Leghorn
   Author URI: https://blog.nickleghorn.com
   License: GPL2
@@ -15,6 +15,7 @@
     $ID = sanitize_text_field($ID);
     $image = sanitize_text_field($image);
     $real = sanitize_text_field($real);
+    $return = "";
 
     //Check that the two posts passed are a number
     if ((is_numeric($image)) AND  (is_numeric($ID)))
@@ -33,23 +34,25 @@
           //Otherwise, tell them what would have happened
           else
           {
-            echo "Would have set image " . wp_kses($image,array()) . "<br>";
+            $return = $return . "Would have set image " . wp_kses($image,array()) . "<br>";
           }
         }
         else
         {
-          echo "ERROR: Identified image ID is not an image<br>";
+          $return = $return . "ERROR: Identified image ID is not an image<br>";
         }
       }
       else
       {
-        echo "ERROR: Tried to set the featured image for something that is not a post<br>";
+        $return = $return . "ERROR: Tried to set the featured image for something that is not a post<br>";
       }
     }
     else
     {
-      echo "ERROR: Either the Post ID or the Featured Image ID are not a number<br>";
+      $return = $return . "ERROR: Either the Post ID or the Featured Image ID are not a number<br>";
     }
+
+    return $return;
   }
 
   //Check whether a post has a featured image set, and if none set, find and set a suitable image
@@ -60,7 +63,7 @@
     //Check that there is a featured image
     if (get_post_thumbnail_id($Return_ID) == FALSE)
     {
-      echo "NO FEATURED IMAGE!<br>";
+      $return = $return . "NO FEATURED IMAGE!<br>";
       
       //Find featured image
       $img_ref = '';
@@ -75,18 +78,18 @@
 
       if (strlen($return_content) > 0)
       {
-        $reurn = $return . "Grabbed post: " . wp_kses(md5($return_content),array()) . "<br>";
+        $return = $return . "Grabbed post: " . wp_kses(md5($return_content),array()) . "<br>";
         
         //Check override
         if ( (strlen($dim) > 0) AND ($override == 1) )
         {
           //Check that this is really an image and post
-          fibs_CheckAndPost($Return_ID,$dim,$forreal);
+          $return = $return . fibs_CheckAndPost($Return_ID,$dim,$forreal);
         }
         //is there an image to be found?
         elseif (substr_count($return_content,'wp-image-'))
         {
-          $reurn = $return . "Image found!<br>";
+          $return = $return . "Image found!<br>";
           
           //First or last image?
           if ($firstlast == 0)
@@ -107,7 +110,7 @@
             //Slice string to just post ID
             $thumbnailID = substr($img_slice,9,($counter - 9));
 
-            fibs_CheckAndPost($Return_ID,$thumbnailID,$forreal);
+            $return = $return . fibs_CheckAndPost($Return_ID,$thumbnailID,$forreal);
             
           }
           else
@@ -128,31 +131,31 @@
             //Slice string to just post ID
             $thumbnailID = substr($img_slice,9,($counter - 9));
 
-            fibs_CheckAndPost($Return_ID,$thumbnailID,$forreal);
+            $return = $return . fibs_CheckAndPost($Return_ID,$thumbnailID,$forreal);
           }
 
         }
         elseif (strlen($dim) > 0)
         {
           //Check that this is really an image and post
-          fibs_CheckAndPost($Return_ID,$dim,$forreal);
+          $return = $return . fibs_CheckAndPost($Return_ID,$dim,$forreal);
                         
         }
         else
         {
-          $reurn = $return . "ERROR: No image found<br>";
+          $return = $return . "ERROR: No image found<br>";
         }
 
       }
       else
       {
-        $reurn = $return . "ERROR: Zero length post<br>";
+        $return = $return . "ERROR: Zero length post<br>";
       }
       
     }
     else
     {
-      $reurn = $return . "FEATURED IMAGE SET!<br>";
+      $return = $return . "FEATURED IMAGE SET!<br>";
     }
 
     return $return;
@@ -371,7 +374,7 @@
           
           echo "<br>Checking " . wp_kses($Return_ID,array()) . "<br>";
 
-          fibs_featured_image_set($Return_ID,$tablename,$con,$dim,$firstlast,$forreal,$override);
+          echo fibs_featured_image_set($Return_ID,$tablename,$con,$dim,$firstlast,$forreal,$override);
           
         }
         echo '<br><br>FINSIHED: <a href="options-general.php?page=fibs_plugin">Back to the beginning!</a>';
